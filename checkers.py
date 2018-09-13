@@ -43,7 +43,7 @@ OPERATING_SYSTEM_INFORMATION_COMMANDS = {
         "cat /etc/issue", "cat /etc/*-release", "cat /etc/lsb-release", "cat /etc/redhat-release"
     ],
     "kernel information": [
-        "cat /proc/version", "uname -a", "uname -mrs", "rpm -q kernel", "dmesg | grep Linux", "ls /boot | grep vmlinuz-"
+        "cat /proc/version", "uname -a", "uname -mrs", "rpm -q kernel", "dmesg |grep Linux", "ls /boot |grep vmlinuz-"
     ],
     "environment variables": [
         "cat /etc/profile", "cat /etc/bashrc",
@@ -57,7 +57,7 @@ APPLICATIONS_AND_SERVICES_COMMANDS = {
         "ps aux", "ps -ef", "cat /etc/services"
     ],
     "processes being run by root": [
-        "ps aux | grep root", "ps -ef | grep root"
+        "ps aux |grep root", "ps -ef |grep root"
     ],
     "installed applications": [
         "ls -alh /usr/bin/", "ls -alh /sbin/", "dpkg -l", "rpm -qa",
@@ -67,10 +67,10 @@ APPLICATIONS_AND_SERVICES_COMMANDS = {
         "cat /etc/syslog.conf", "cat /etc/chttp.conf", "cat /etc/lighttpd.conf",
         "cat /etc/cups/cupsd.conf", "cat /etc/inetd.conf", "cat /etc/apache2/apache2.conf",
         "cat /etc/my.conf", "cat /etc/httpd/conf/httpd.conf", "cat /opt/lampp/etc/httpd.conf",
-        'ls -aRl /etc/ | awk \'$1 ~ /^.*r.*/\''
+        'ls -aRl /etc/ |awk \'$1 ~ /^.*r.*/\''
     ],
     "scheduled jobs": [
-        "crontab -l", "ls -alh /var/spool/cron", "ls -al /etc/ | grep cron",
+        "crontab -l", "ls -alh /var/spool/cron", "ls -al /etc/ |grep cron",
         "ls -al /etc/cron*", "cat /etc/cron*", "cat /etc/at.allow", "cat /etc/at.deny",
         "cat /etc/cron.allow", "cat /etc/cron.deny", "cat /etc/crontab",
         "cat /etc/anacrontab", "cat /var/spool/cron/crontabs/root"
@@ -90,13 +90,13 @@ NETWORKING_COMMUNICATION_COMMANDS = {
 }
 CONFIDENTIAL_USER_INFORMATION_DISCLOSURE_COMMANDS = {
     "who can do what": [
-        "id", "who", "w", "last", "cat /etc/passwd | cut -d: -f1",
-        "grep -v -E \"^#\" /etc/passwd | awk -F: '$3 == 0 { print $1}'",
+        "id", "who", "w", "last", "cat /etc/passwd |cut -d: -f1",
+        "grep -v -E \"^#\" /etc/passwd |awk -F: '$3 == 0 { print $1}'",
         "awk -F: '($3 == \"0\") {print}' /etc/passwd", "cat /etc/sudoers"
     ],
     "plaintext usernames and passwords": [
         "grep -i user /*", "grep -i pass /*", "grep -C 5 \"password\" /*",
-        "find . -name \"*.php\" -print0 | xargs -0 grep -i -n \"var $password\""
+        "find . -name \"*.php\" -print0 |xargs -0 grep -i -n \"var $password\""
     ],
     "sensitive file disclosure": [
         "cat /etc/passwd", "cat /etc/group", "cat /etc/shadow", "ls -alh /var/mail/"
@@ -120,10 +120,10 @@ CONFIDENTIAL_USER_INFORMATION_DISCLOSURE_COMMANDS = {
 }
 FILE_SYSTEM_EXPOSURE_COMMANDS = {
     "configuration files that can be written": [
-        "ls -aRl /etc/ | awk '$1 ~ /^.*w.*/' 2>/dev/null",
-        "ls -aRl /etc/ | awk '$1 ~ /^..w/' 2>/dev/null",
-        "ls -aRl /etc/ | awk '$1 ~ /^.....w/' 2>/dev/null",
-        "ls -aRl /etc/ | awk '$1 ~ /w.$/' 2>/dev/null",
+        "ls -aRl /etc/ |awk '$1 ~ /^.*w.*/' 2>/dev/null",
+        "ls -aRl /etc/ |awk '$1 ~ /^..w/' 2>/dev/null",
+        "ls -aRl /etc/ |awk '$1 ~ /^.....w/' 2>/dev/null",
+        "ls -aRl /etc/ |awk '$1 ~ /w.$/' 2>/dev/null",
         "find /etc/ -readable -type f 2>/dev/null",
         "find /etc/ -readable -type f -maxdepth 1 2>/dev/null"
     ],
@@ -187,7 +187,7 @@ FILE_SYSTEM_EXPOSURE_COMMANDS = {
 def run_command(command):
     command = shlex.split(command)
     try:
-        proc = subprocess.check_output(command)
+        proc = subprocess.check_output(command, shell=True)
         if not proc:
             return None
         return proc
@@ -197,7 +197,7 @@ def run_command(command):
         return None
     except AttributeError:
         try:
-            proc = subprocess.Popen(command, stdout=subprocess.PIPE)
+            proc = subprocess.Popen(command, stdout=subprocess.PIPE, shell=True)
             res = proc.communicate()[0]
             if res:
                 return res
@@ -251,14 +251,17 @@ def main():
                         done.append(k)
                 else:
                     print("[~] already done that")
+        print("[*] done, remember to use `kill -9 $$` to prevent bash history!")
     else:
         print("[!] must specify something to search")
-        os.remove(folder_path)
-    print("[!] done, remember to use `kill -9 $$` to prevent bash history!")
+        try:
+            os.remove(folder_path)
+        except:
+            pass
 
 
 if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        print("[!] i guess you found what you wanted, remember to use `kill -9 $$` to prevent bash history!")
+        print("[*] i guess you found what you wanted, remember to use `kill -9 $$` to prevent bash history!")
