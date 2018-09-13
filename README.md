@@ -21,7 +21,7 @@ optional arguments:
 # Installation
 wget:
 ```
-wget https://git.io/fAiCs
+wget -O checkers.py https://git.io/fAiCs
 ```
 
 cURL:
