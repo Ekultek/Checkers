@@ -127,7 +127,7 @@ FILE_SYSTEM_EXPOSURE_COMMANDS = {
         "find /etc/ -readable -type f 2>/dev/null",
         "find /etc/ -readable -type f -maxdepth 1 2>/dev/null"
     ],
-    "files in /var": [
+    "files in var": [
         "ls -alh /var/log", "ls -alh /var/mail",
         "ls -alh /var/spool", "ls -alh /var/spool/lpd",
         "ls -alh /var/lib/pgsql", "ls -alh /var/lib/mysql",
