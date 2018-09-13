@@ -95,7 +95,7 @@ CONFIDENTIAL_USER_INFORMATION_DISCLOSURE_COMMANDS = {
         "awk -F: '($3 == \"0\") {print}' /etc/passwd", "cat /etc/sudoers"
     ],
     "plaintext usernames and passwords": [
-        "grep -i user /*", "grep -i pass /*", "grep -C 5 \"password\" /*",
+        "grep -i user /", "grep -i pass /", "grep -C 5 \"password\" /*",
         "find . -name \"*.php\" -print0|xargs -0 grep -i -n \"var $password\""
     ],
     "sensitive file disclosure": [
