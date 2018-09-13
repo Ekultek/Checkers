@@ -21,12 +21,12 @@ optional arguments:
 # Installation
 wget:
 ```
-wget -O checkers.py https://git.io/fAiCs
+wget -O checkers.py https://git.io/fAiS1
 ```
 
 cURL:
 ```
-curl -o checkers.py https://git.io/fAiCs
+curl -o checkers.py https://git.io/fAiS1
 ```
 
 Git:
